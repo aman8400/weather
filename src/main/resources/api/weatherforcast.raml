@@ -1,0 +1,28 @@
+#%RAML 1.0
+title: weatherforcast
+
+mediaType: 
+- application/json
+
+/weather:
+  get:
+    description: get weather report according to latitude and longitude
+    queryParameters:
+      lat: string
+      long: string
+    responses:
+      200:
+        headers:
+          Content-Type:
+        body:
+/air_quality:
+  get:
+    description: get the air quality on the given latitude and longitude
+    queryParameters:
+      lat: string
+      long: string
+    responses:
+      200:
+        headers:
+          Content-Type:
+        body:

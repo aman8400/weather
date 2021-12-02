@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="05625241-563f-44cc-aa21-d743ca1e21f4" >
+		<http:request-connection host="api.openweathermap.org" port="443" protocol="HTTPS"/>
+	</http:request-config>
+	<email:smtp-config name="SMTP_global_Connection" doc:name="Email SMTP" doc:id="7e0cebbe-5184-414d-aeec-db9c8eddd9b3" >
+		<email:smtp-connection host="smtp.gmail.com" port="587" user="aman.o.srivastava@apisero.com" password="Aman@8400" >
+			<email:properties >
+				<email:property key="mail.smtp.starttls.enable" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+	<flow name="weatherimplementationFlow" doc:id="8062ce8d-39fe-48df-a414-c6bfa509a178" >
+		<logger level="INFO" doc:name="Logger" doc:id="313ded81-6120-4474-bc84-6bca6e9b416a" message="initial stage"/>
+		<flow-ref doc:name="Flow Reference" doc:id="72ad560a-9d60-4d87-acb4-d6567e78caf6" name="weatherimplementationFlow1"/>
+		<logger level="INFO" doc:name="Logger" doc:id="37528ab5-fb62-4170-a333-4a890def8079" message="first stage"/>
+		<http:request method="GET" doc:name="Request" doc:id="f326db2f-ae9d-4258-9902-49a069f1b30a" config-ref="HTTP_Request_configuration" path="/data/2.5/weather">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"appid" : "c7c0ff4bb7027415665cf2c71eeff96d",
+	"lat" : vars.parameter.lat,
+	"lon" : vars.parameter.long
+}]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="98d819fc-e69a-4869-b1e6-39aaa80bbd75" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="007894bb-5dea-44ca-bdcd-94e5c5a97875" >
+			<when expression="#[payload.weather[0].main == 'Clouds']">
+				<ee:transform doc:name="Transform Message" doc:id="9fe3d3ef-cc4e-4570-ae28-1c574ac0a3a5" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Bad weather"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<email:send doc:name="Send" doc:id="7dd95df9-c236-4a83-945c-30f342a673af" config-ref="SMTP_global_Connection" fromAddress="aman.o.srivastava@apisero.com">
+					<email:to-addresses >
+						<email:to-address value="rishu.aman234@gmail.com" />
+					</email:to-addresses>
+				</email:send>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="f3739386-d037-460a-bf42-077ad0127bc4" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="4e43a3dc-98c5-4d50-b32a-64826ccb9c47" message="email sent"/>
+	</flow>
+	<flow name="airquality_implementationFlow1" doc:id="ab1bcd3d-006c-4432-b382-3b5cd58db42d" >
+		<flow-ref doc:name="Flow Reference" doc:id="eeddb04b-c0ee-4cd2-8c42-59b72548a056" name="weatherimplementationFlow1"/>
+		<http:request method="GET" doc:name="Request" doc:id="34690c3a-d499-4723-bd51-9d3e5e7a08da" config-ref="HTTP_Request_configuration" path="/data/2.5/air_pollution">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"appid" : "c7c0ff4bb7027415665cf2c71eeff96d",
+	"lat" : vars.parameter.lat,
+	"lon" : vars.parameter.long
+}]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="7e81e4fd-3793-4379-ba19-5c23e66f2530" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="4fb8a502-3288-40c1-97d9-12dd1e1f8da3" >
+			<when expression="#[payload.list[0].main.aqi &gt; 3]">
+				<ee:transform doc:name="Transform Message" doc:id="fd3b77ff-be4e-4221-887b-791efd9f77d8" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "poor air quality"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<email:send doc:name="Send" doc:id="cb59afdb-f7d0-4cd6-a990-a683c9c3480d" config-ref="SMTP_global_Connection" fromAddress="aman.o.srivastava@apisero.com">
+					<email:to-addresses >
+						<email:to-address value="rishu.aman234@gmail.com" />
+					</email:to-addresses>
+				</email:send>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="4c5b5500-2c00-4aba-bd28-4fe09e0ac6d2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload.list[0].main.aqi]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="22f1274f-7bd9-4883-9da2-ee5c9ed4837e" />
+	</flow>
+	<flow name="weatherimplementationFlow1" doc:id="491a6798-2698-4a13-9267-55236d1a0f77" >
+		<set-variable value="#[attributes.queryParams]" doc:name="Set Variable" doc:id="3045a459-8f76-4b0d-8396-febcd1e3b675" variableName="parameter"/>
+	</flow>
+</mule>

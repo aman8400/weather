@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="weatherimplementation-suite.xml" />
+	<munit:test name="weatherimplementationFlow-test_success1" doc:id="e23b9a30-1340-42c9-afbd-8e83e10a196a" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Request" doc:id="5f399e70-5bf6-4ddd-bb4d-9486ffc27404" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f326db2f-ae9d-4258-9902-49a069f1b30a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://weatherimplementationFlowtestsuccess1\mock_payload.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://weatherimplementationFlowtestsuccess1\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://weatherimplementationFlowtestsuccess1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="parameter" value="#[output application/java --- readUrl('classpath://weatherimplementationFlowtestsuccess1\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="bd00719d-8cbd-4495-b802-b25027a61a56" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="72ad560a-9d60-4d87-acb4-d6567e78caf6" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://weatherimplementationFlowtestsuccess1\mock_payload1.dwl')]" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://weatherimplementationFlowtestsuccess1\mock_attributes1.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://weatherimplementationFlowtestsuccess1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="parameter" value="#[output application/java --- readUrl('classpath://weatherimplementationFlowtestsuccess1\mock_variable_3.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="2732ddd1-6bf0-4b10-963c-482d98d32c54" >
+				<munit:payload value="#[readUrl('classpath://weatherimplementationFlowtestsuccess1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://weatherimplementationFlowtestsuccess1\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://weatherimplementationFlowtestsuccess1\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to weatherimplementationFlow" doc:id="ad2a3532-996b-48c4-866b-2861f77559ee" name="weatherimplementationFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="8a7f2303-d51f-4620-a13b-fec0e4c79d17" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import weatherimplementationFlowtestsuccess1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="0b2a3270-9325-40bf-a2f8-e6e8bae09d73" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f3739386-d037-460a-bf42-077ad0127bc4" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="fb797205-64cd-4f83-b3db-126f27d60f51" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4e43a3dc-98c5-4d50-b32a-64826ccb9c47" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="3f1db605-b793-4737-89a5-7bb074f203d9" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="98d819fc-e69a-4869-b1e6-39aaa80bbd75" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="a8bc7deb-b24c-4ecd-b9d8-888b6c5b4bf6" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="37528ab5-fb62-4170-a333-4a890def8079" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="cce9488d-3132-42d7-8328-ea853a6da214" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="313ded81-6120-4474-bc84-6bca6e9b416a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="weatherimplementationFlow-test_success2" doc:id="d546e8ef-76bb-43bf-b2dd-7217e99a79a5" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="8358a968-2e8d-48e3-bad2-cd45ecd8ffb0" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="72ad560a-9d60-4d87-acb4-d6567e78caf6" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://weatherimplementationFlowtestsuccess2\mock_payload.dwl')]" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://weatherimplementationFlowtestsuccess2\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://weatherimplementationFlowtestsuccess2\mock_variable_.dwl')]" />
+						<munit-tools:variable key="parameter" value="#[output application/java --- readUrl('classpath://weatherimplementationFlowtestsuccess2\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Send" doc:id="d09faf5a-7b73-4fb2-96d4-7421249ede29" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7dd95df9-c236-4a83-945c-30f342a673af" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://weatherimplementationFlowtestsuccess2\mock_payload1.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://weatherimplementationFlowtestsuccess2\mock_attributes1.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://weatherimplementationFlowtestsuccess2\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="parameter" value="#[output application/java --- readUrl('classpath://weatherimplementationFlowtestsuccess2\mock_variable_3.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="e33fe470-f466-46d0-b1f9-3622348b874e" >
+				<munit:payload value="#[readUrl('classpath://weatherimplementationFlowtestsuccess2\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://weatherimplementationFlowtestsuccess2\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://weatherimplementationFlowtestsuccess2\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to weatherimplementationFlow" doc:id="336296eb-25d8-41d4-be89-075fd7b0d677" name="weatherimplementationFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="fdd22d77-3ed2-4770-a63f-6fecce703990" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import weatherimplementationFlowtestsuccess2::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="c72626fa-e2e8-49ba-96dd-169817d4b810" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="37528ab5-fb62-4170-a333-4a890def8079" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="13aa4df0-6a13-45cf-983a-85c9dc156c9f" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="313ded81-6120-4474-bc84-6bca6e9b416a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="01536e7f-faf1-478d-830a-6890852fd976" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9fe3d3ef-cc4e-4570-ae28-1c574ac0a3a5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="weatherimplementationFlow1-test_success3" doc:id="0d8b9080-84ad-4eda-9cfa-ceb9b19ef8cd" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Set Variable" doc:id="ff25b312-9a43-4475-9b84-170c2b4ccf91" processor="set-variable">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3045a459-8f76-4b0d-8396-febcd1e3b675" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://weatherimplementationFlow1testsuccess3\mock_variable_.dwl')]" />
+						<munit-tools:variable key="parameter" value="#[output application/java --- readUrl('classpath://weatherimplementationFlow1testsuccess3\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="75ad251e-10e1-4ab3-9a66-e2d76265a82c" >
+				<munit:payload value="#[readUrl('classpath://weatherimplementationFlow1testsuccess3\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://weatherimplementationFlow1testsuccess3\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://weatherimplementationFlow1testsuccess3\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to weatherimplementationFlow1" doc:id="48af10ca-6d5c-4a1f-a61d-723318bbc537" name="weatherimplementationFlow1"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="0f79aecf-7922-4bd2-b593-57f5b8478988" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import weatherimplementationFlow1testsuccess3::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="airquality_implementationFlow1-test_Success4" doc:id="e445f529-cead-4c75-a57d-0b935459530e" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="136ffc79-8453-420a-8995-46a8129435ed" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="eeddb04b-c0ee-4cd2-8c42-59b72548a056" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://airqualityimplementationFlow1testSuccess4\mock_payload.dwl')]" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://airqualityimplementationFlow1testSuccess4\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://airqualityimplementationFlow1testSuccess4\mock_variable_.dwl')]" />
+						<munit-tools:variable key="parameter" value="#[output application/java --- readUrl('classpath://airqualityimplementationFlow1testSuccess4\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="8b8f6fc1-ea2d-46d7-9ca0-1642d5352420" >
+				<munit:payload value="#[readUrl('classpath://airqualityimplementationFlow1testSuccess4\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://airqualityimplementationFlow1testSuccess4\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://airqualityimplementationFlow1testSuccess4\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to airquality_implementationFlow1" doc:id="8cd09476-6d0e-4630-8144-b564b2e9fe6e" name="airquality_implementationFlow1"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="09f4b541-f729-4186-95bb-03a1c7997f2e" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import airqualityimplementationFlow1testSuccess4::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Request" doc:id="ec8f00d8-4238-4fdc-a7e2-9dcd3c7adf55" processor="http:request" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="34690c3a-d499-4723-bd51-9d3e5e7a08da" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="142d1f37-b32c-411c-9c63-0f4442ccfac2" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="22f1274f-7bd9-4883-9da2-ee5c9ed4837e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="931d106b-ef12-426f-945a-673796fec9d5" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7e81e4fd-3793-4379-ba19-5c23e66f2530" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="airquality_implementationFlow1-test_Success5" doc:id="4dcbc271-9861-4569-a0f3-bad155e0c757" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="49ad8a15-e17b-4ba7-b53e-c55150e1b971" >
+				<munit:payload value="#[readUrl('classpath://airqualityimplementationFlow1testSuccess5\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://airqualityimplementationFlow1testSuccess5\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://airqualityimplementationFlow1testSuccess5\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to airquality_implementationFlow1" doc:id="c9710796-6804-4b1a-8d6f-4c02c43a35d7" name="airquality_implementationFlow1"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="0403ae8a-d861-49c6-af98-647e5f001c24" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import airqualityimplementationFlow1testSuccess5::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Send" doc:id="a8df75a0-e3cf-4647-ae92-cd7fc67847a3" processor="email:send" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cb59afdb-f7d0-4cd6-a990-a683c9c3480d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="8c8eedaf-1e6c-4fda-86e9-7de7ca7eb70c" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="fd3b77ff-be4e-4221-887b-791efd9f77d8" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
